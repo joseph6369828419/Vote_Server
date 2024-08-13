@@ -3,139 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voting Project</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-
-        .container {
-            text-align: center;
-        }
-
-        .voting-container {
-            display: none; /* Initially hidden */
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-
-        .vote-option {
-            text-align: center;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-
-        p {
-            margin-top: 10px;
-            font-size: 18px;
-        }
-
-        input[type="email"] {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #cccccc;
-            width: 100%;
-            max-width: 300px;
-            box-sizing: border-box;
-        }
-    </style>
+    <title>Voting Form</title>
 </head>
 <body>
-    <div class="container">
-        <input type="email" id="emailInput" placeholder="Enter your email">
-        <button id="submitBtn">Submit</button>
-
-        <div class="voting-container" id="votingContainer">
-            <div class="vote-option">
-                <button id="buttonA">Vote for A</button>
-                <p id="votesA">Votes: 0</p>
-            </div>
-            <div class="vote-option">
-                <button id="buttonB">Vote for B</button>
-                <p id="votesB">Votes: 0</p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-      document.getElementById('submitBtn').addEventListener('click', () => {
-    const email = document.getElementById('emailInput').value;
-
-    fetch('http://localhost:3000/get-votes')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('votesA').textContent = `Votes: ${data.votesA}`;
-            document.getElementById('votesB').textContent = `Votes: ${data.votesB}`;
-        })
-        .catch(error => console.error('Error:', error));
-
-    fetch('http://localhost:3000/submit-vote', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, voteFor: 'A' }), // Change 'A' to 'B' as needed
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message === 'You have already voted.') {
-                alert(data.message);
-                document.getElementById('submitBtn').disabled = true;
-                document.getElementById('emailInput').disabled = true;
-
-                
-                const Div1 = document.getElementById('votingContainer');
-                Div1.style.display = 'block';
-
-                document.getElementById('buttonA').disabled = true;
-                document.getElementById('buttonB').disabled = true;
-            } else {
-                document.getElementById('votingContainer').style.display = 'flex';
-                document.getElementById('submitBtn').disabled = true;
-                document.getElementById('emailInput').disabled = true;
-
-            }
-        })
-        .catch(error => console.error('Error:', error));
-});
-
-document.getElementById('buttonA').addEventListener('click', () => {
-    disableButtons();
-});
-
-document.getElementById('buttonB').addEventListener('click', () => {
-    disableButtons();
-});
-
-function disableButtons() {
-    document.getElementById('buttonA').disabled = true;
-    document.getElementById('buttonB').disabled = true;
-}
-
-    </script>
-</body>
+    <h1>Vote for Your Option</h1>
+    <form action="/submit" method="post">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <fieldset>
+            <legend>Vote</legend>
+            <label for="voteA">Option A</label>
+            <input type="radio" id="voteA" name="vote" value="A">
+            
+            <label for="voteB">Option B</label>
+            <input type="radio" id="voteB" name="vote" value="B">
+        </fieldset>
+        
+        <button type="submit">Submit</button>
+    </form>
+    
+  
 </html>
